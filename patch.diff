@@ -1,0 +1,54 @@
+diff --git a/peda.py b/peda.py
+index 14a7f5e..e0a08f4 100644
+--- a/peda.py
++++ b/peda.py
+@@ -342,6 +342,28 @@ class PEDA(object):
+         tmp.close()
+         return result
+ 
++    def disable_hook_stop(self):
++        """
++        disable hook-stop
++        """
++        tmp = tmpfile()
++        tmp.write("define hook-stop\nend\n")
++        tmp.flush()
++        result = self.execute("source %s" % tmp.name)
++        tmp.close()
++        return result
++
++    def enable_hook_stop(self):
++        """
++        disable hook-stop
++        """
++        tmp = tmpfile()
++        tmp.write("define hook-stop\npeda context\nsession autosave\nend\n")
++        tmp.flush()
++        result = self.execute("source %s" % tmp.name)
++        tmp.close()
++        return result
++
+     #########################
+     #   Debugging Helpers   #
+     #########################
+@@ -3448,6 +3470,20 @@ class PEDACmd(object):
+ 
+         return
+ 
++    def disable_hook_stop(self, *arg):
++        """
++        Disable stop-hook
++        """
++        peda.disable_hook_stop()
++        return True
++
++    def enable_hook_stop(self, *arg):
++        """
++        Enable stop-hook
++        """
++        peda.enable_hook_stop()
++        return True
++
+     def session(self, *arg):
+         """
+         Save/restore a working gdb session to file as a script
